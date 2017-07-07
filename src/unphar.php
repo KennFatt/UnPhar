@@ -80,7 +80,7 @@ class UnPhar {
             $this->errorCause(UnPhar::INVALID_INPUT);
         }
 
-        $this->sendMessage("Please insert a path for extracting data: ");
+        $this->sendMessage("Please insert a path for extracting data (Ex: C:\Users\KENNAN\Desktop\): ");
         
         if ($this->readLine() !== "") {
             if (is_dir($this->tempInput)) {

@@ -116,23 +116,6 @@ class UnPhar {
     }
 
     /**
-     * Check if input is valid value or not.
-     *
-     * @param string $message
-     *
-     * @return bool
-     */
-    public function getInput(string $message) : bool
-    {
-        if ($message !== "") {
-            return true;
-        } else {
-            $this->errorCause(UnPhar::INVALID_INPUT);
-            return false;
-        }
-    }
-
-    /**
      * Get input from STDIN.
      *
      * @return string

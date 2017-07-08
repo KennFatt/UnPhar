@@ -88,10 +88,7 @@ class UnPhar {
             $this->outputPath = getcwd()."\\phars\\extracted\\";
 
             foreach (scandir(getcwd()."\\phars\\") as $id => $fileName) {
-                if ($fileName == "." or $fileName == ".." or $fileName == "extracted" or !strpos($fileName, ".phar")) {
-                    $this->sendMessage("[Error] Ignored files $fileName");
-                    continue;
-                }
+                if ($fileName == "." or $fileName == ".." or $fileName == "extracted" or !strpos($fileName, ".phar")) continue;
                 $scannedFiles[$fileName] = new Phar(getcwd()."\\phars\\$fileName");
             }
 

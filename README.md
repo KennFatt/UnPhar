@@ -8,11 +8,9 @@ OS: Tested on Linux and Windows
 
 # How To Use
 
-1. Place this script into ur PHAR file folder.
-2. Run by typing "php unphar.php"
-3. Follow instruction and done!
-
-NOTE: For multiple files, you should put all phar files into "phars" folder. If it doesnt exists, it should be generated automatically when you launch it.
+1. Before extracting, make sure that "phars" folder is exists. (or it will generated automatically)
+2. Put all your phar file(s) into "phars" folder.
+3. Launch it and you can see extracted files on "extracted" folder.
 
 # About
 

@@ -76,6 +76,8 @@ class UnPhar {
     /**
      * Extracting process.
      *
+     * @param bool $multiple
+     *
      * @return void
      */
     public function processExecute(bool $multiple = false)

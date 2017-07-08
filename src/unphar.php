@@ -29,7 +29,7 @@ class UnPhar {
         cli_set_process_title(UnPhar::NAME . " - " . UnPhar::VERSION . " @" . UnPhar::AUTHOR);
 
         $this->sendMessage("
-        Hello! This project is used for extracting Phar files (PHP Archiver) to source code.
+        Hello! This project is used for extracting Phar file (PHP Archiver) into source code.
         Creator: @KennFatt
         Github: https://www.github.com/KennFatt
         ");

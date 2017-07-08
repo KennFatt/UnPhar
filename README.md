@@ -12,6 +12,8 @@ OS: Tested on Linux and Windows
 2. Run by typing "php unphar.php"
 3. Follow instruction and done!
 
+NOTE: For multiple files, you should put all phar files into "phars" folder. If it doesnt exists, it should be generated automatically when you launch it.
+
 # About
 
 Author: @KennFatt

@@ -3,7 +3,7 @@
 class UnPhar {
 
     const NAME = "UnPhar";
-    const VERSION = "v1.1";
+    const VERSION = "v1.2";
     const AUTHOR = "KennFatt";
 
     const INVALID_MESSAGE = 0;
@@ -28,6 +28,10 @@ class UnPhar {
     {
         cli_set_process_title(UnPhar::NAME . " - " . UnPhar::VERSION . " @" . UnPhar::AUTHOR);
 
+        // for multiple phars
+        if (!is_dir(getcwd()."\\phars")) @mkdir(getcwd()."\\phars");
+        if (!is_dir(getcwd()."\\phars\\extracted")) @mkdir(getcwd()."\\phars\\extracted");
+
         $this->sendMessage("
         Hello! This project is used for extracting Phar file (PHP Archiver) into source code.
         Creator: @KennFatt
@@ -35,13 +39,19 @@ class UnPhar {
         ");
 
         $this->sendMessage("
-        Do you want execute this program? (Type y for yes).
+        Please select one option to continue:
+        > single - Extracting single Phar file.
+        > multiple - Extracting multiple Phar files.
+        > exit - Exit program.
+        NOTE: For multiple you should place phar file(s) into ".getcwd()."\\phars\\"." folder!
         ");
 
-        if (strtolower($this->readLine()) === "y") {
+        if (strtolower($this->readLine()) === "single") {
             $this->processExecute();
+        } elseif (strtolower($this->tempInput) === "multiple") {
+            $this->processExecute(true);
         } else {
-            $this->close("Ignoring agreement!");
+            $this->close("Force closing program!");
         }
     }
 
@@ -66,10 +76,40 @@ class UnPhar {
     /**
      * Extracting process.
      *
-     * @return mixed
+     * @return void
      */
-    public function processExecute()
+    public function processExecute(bool $multiple = false)
     {
+        if ($multiple) {
+            $scannedFiles = [];
+
+            $this->outputPath = getcwd()."\\phars\\extracted\\";
+
+            foreach (scandir(getcwd()."\\phars\\") as $id => $fileName) {
+                if ($fileName == "." or $fileName == ".." or $fileName == "extracted" or !strpos($fileName, ".phar")) {
+                    $this->sendMessage("[Error] Ignored files $fileName");
+                    continue;
+                }
+                $scannedFiles[$fileName] = new Phar(getcwd()."\\phars\\$fileName");
+            }
+
+            $totalFiles = count($scannedFiles);
+
+            if ($totalFiles <= 0) {
+                $this->close("[Error] Could not find Phar files in " .getcwd()."\\phars\ directory!");
+                return;
+            }
+
+            foreach ($scannedFiles as $name => $pharClass) {
+                $this->sendMessage("[$totalFiles] Extracting $name...");
+                $pharClass->extractTo($this->outputPath."\\$name\\", null, true);
+                $totalFiles--;
+            }
+
+            $this->sendMessage("Extracting succeed! File located at " . $this->outputPath);
+            return;
+        }
+
         $pharName = "";
 
         $this->sendMessage("Please insert Phar name (Ex: Lib.phar): ");
@@ -105,6 +145,7 @@ class UnPhar {
         $this->sendMessage("Extracting a phar, please wait...");
         $this->pharFile->extractTo($this->outputPath, null, true);
         $this->sendMessage("Extracting succeed! File located at " . $this->outputPath);
+        return;
     }
 
     /**

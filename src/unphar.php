@@ -3,7 +3,7 @@
 class UnPhar {
 
     const NAME = "UnPhar";
-    const VERSION = "v1.3";
+    const VERSION = "v1.4";
     const AUTHOR = "KennFatt";
 
     const INVALID_MESSAGE = 0;
@@ -23,10 +23,14 @@ class UnPhar {
      */
     public function init()
     {
+        if (version_compare(phpversion(), "7.0.0", "<")) {
+            $this->close("[Critical] Requires PHP Version >= 7.0.0");
+        }
+
         cli_set_process_title(UnPhar::NAME . " - " . UnPhar::VERSION . " @" . UnPhar::AUTHOR);
 
-        if (!is_dir(getcwd()."\\phars")) @mkdir(getcwd()."\\phars");
-        if (!is_dir(getcwd()."\\phars\\extracted")) @mkdir(getcwd()."\\phars\\extracted");
+        if (!is_dir(getcwd()."/phars")) @mkdir(getcwd()."/phars");
+        if (!is_dir(getcwd()."/phars/extracted")) @mkdir(getcwd()."/phars/extracted");
 
         $this->sendMessage("
         Hello! This project is used for extracting Phar file (PHP Archiver) into source code.
@@ -38,7 +42,7 @@ class UnPhar {
         Please select one option to continue:
         > extract - Extract phar file(s).
         > exit - Exit program.
-        NOTE: Before extracting, you should place phar file(s) into ".getcwd()."\\phars\\"." folder!
+        NOTE: Before extracting, you should place phar file(s) into ".getcwd()."/phars/"." folder!
         ");
 
         if (strtolower($this->readLine()) === "extract") {
@@ -76,24 +80,24 @@ class UnPhar {
         /** @var \Phar[] */
         $scannedFiles = [];
 
-        $this->outputPath = getcwd()."\\phars\\extracted\\";
+        $this->outputPath = getcwd()."/phars/extracted/";
 
-        foreach (scandir(getcwd()."\\phars\\") as $id => $fileName) {
+        foreach (scandir(getcwd()."/phars/") as $id => $fileName) {
             if ($fileName == "." or $fileName == ".." or $fileName == "extracted" or !strpos($fileName, ".phar")) continue;
-            $scannedFiles[$fileName] = new Phar(getcwd()."\\phars\\$fileName", 0);
+            $scannedFiles[$fileName] = new Phar(getcwd()."/phars/$fileName", 0);
         }
 
         /** @var int */
         $totalFiles = count($scannedFiles);
 
         if ($totalFiles <= 0) {
-            $this->close("[Error] Could not find Phar files in " .getcwd()."\\phars\ directory!");
+            $this->close("[Error] Could not find Phar files in " .getcwd()."/phars/ directory!");
             return;
         }
 
         foreach ($scannedFiles as $name => $pharClass) {
             $this->sendMessage("[$totalFiles] Extracting $name...");
-            $pharClass->extractTo($this->outputPath."\\$name\\", null, true);
+            $pharClass->extractTo($this->outputPath."/$name/", null, true);
             $totalFiles--;
         }
 

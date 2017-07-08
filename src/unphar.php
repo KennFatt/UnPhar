@@ -9,9 +9,6 @@ class UnPhar {
     const INVALID_MESSAGE = 0;
     const INVALID_INPUT = 1;
 
-    /** @var \Phar|null */
-    private $pharFile = null;
-
     /** @var string */
     private $outputPath = "";
     private $tempInput = "";
@@ -76,6 +73,7 @@ class UnPhar {
      */
     public function processExecute()
     {
+        /** @var \Phar[] */
         $scannedFiles = [];
 
         $this->outputPath = getcwd()."\\phars\\extracted\\";
@@ -85,6 +83,7 @@ class UnPhar {
             $scannedFiles[$fileName] = new Phar(getcwd()."\\phars\\$fileName");
         }
 
+        /** @var int */
         $totalFiles = count($scannedFiles);
 
         if ($totalFiles <= 0) {

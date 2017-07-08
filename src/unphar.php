@@ -3,18 +3,17 @@
 class UnPhar {
 
     const NAME = "UnPhar";
-    const VERSION = "v1.0";
+    const VERSION = "v1.1";
     const AUTHOR = "KennFatt";
 
     const INVALID_MESSAGE = 0;
     const INVALID_INPUT = 1;
 
-    /** @var \Phar */
+    /** @var \Phar|null */
     private $pharFile = null;
 
     /** @var string */
     private $outputPath = "";
-
     private $tempInput = "";
 
     public function __construct()
@@ -42,21 +41,23 @@ class UnPhar {
         if (strtolower($this->readLine()) === "y") {
             $this->processExecute();
         } else {
-            $this->sendMessage("Force closing...");
-            $this->close();
+            $this->close("Ignoring agreement!");
         }
     }
 
     /**
      * Close the program.
-     * TODO: Add close message and force close value
      * 
      * @return mixed
      */
-    public function close()
+    public function close(string $message = "")
     {
         if (isset($this->pharFile)) $this->pharFile = null;
         if (isset($this->outputPath)) $this->outputPath = "";
+
+        if ($message !== "") {
+            $this->sendMessage($message);
+        }
 
         $this->sendMessage("Thank you for using " . UnPhar::NAME . "!");
         exit;
@@ -74,6 +75,11 @@ class UnPhar {
         $this->sendMessage("Please insert Phar name (Ex: Lib.phar): ");
         
         if ($this->readLine() !== "" and strpos($this->tempInput, ".phar")) {
+
+            if (!is_file($this->tempInput)) {
+                $this->close("Invalid Phar file!");
+            }
+
             $this->pharFile = new Phar($this->tempInput);
             $pharName = explode(".", $this->tempInput)[0];
         } else {
@@ -90,8 +96,7 @@ class UnPhar {
                 $this->outputPath = $this->outputPath.$pharName."-master";
 
             } else {
-                $this->sendMessage("Invalid directory! Force closing...");
-                $this->close();
+                $this->close("Invalid directory!");
             }
         } else {
             $this->errorCause(UnPhar::INVALID_INPUT);
@@ -138,21 +143,15 @@ class UnPhar {
     {
         switch ($cause) {
             case UnPhar::INVALID_INPUT:
-                $this->sendMessage("Invalid input! Input must be a string and not null!");
-                $this->sendMessage("Force closing...");
-                $this->close();
+                $this->close("Invalid input! Input must be a string and not null!");
                 return true;
             
             case UnPhar::INVALID_MESSAGE:
-                $this->sendMessage("Invalid message! Message must be a string and not null!");
-                $this->sendMessage("Force closing...");
-                $this->close();
+                $this->close("Invalid message! Message must be a string and not null!");
                 return true;
             
             default:
-                $this->sendMessage("[Error] @param $cause is unknown.");
-                $this->sendMessage("Force closing...");
-                $this->close();
+                $this->close("[Error] @param $cause is unknown.");
                 return false;
         }
     }

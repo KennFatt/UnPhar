@@ -2,7 +2,7 @@
 A Simple software to extract PHAR into a files.
 
 ```
-PHP VERSION >= 7.0
+PHP VERSION >= 7.1.0
 OS: Tested on Linux and Windows
 ```
 

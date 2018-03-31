@@ -3,7 +3,7 @@
 class UnPhar {
 
     const NAME = "UnPhar";
-    const VERSION = "v1.4";
+    const VERSION = "v1.5";
     const AUTHOR = "KennFatt";
 
     const INVALID_MESSAGE = 0;
@@ -11,8 +11,10 @@ class UnPhar {
 
     /** @var string */
     private $outputPath = "";
-    private $tempInput = "";
 
+	/**
+	 * UnPhar constructor.
+	 */
     public function __construct()
     {
         $this->init();
@@ -20,21 +22,26 @@ class UnPhar {
 
     /**
      * Initiate program
+     *
+     * @return void
      */
-    public function init()
+    public function init() : void
     {
-        if (version_compare(phpversion(), "7.0.0", "<")) {
-            $this->close("[Critical] Requires PHP Version >= 7.0.0");
+        if (version_compare(phpversion(), "7.1.0", "<")) {
+            $this->close("[Critical] Requires PHP Version >= 7.1.0");
         }
 
         cli_set_process_title(UnPhar::NAME . " - " . UnPhar::VERSION . " @" . UnPhar::AUTHOR);
 
-        if (!is_dir(getcwd()."/phars")) @mkdir(getcwd()."/phars");
-        if (!is_dir(getcwd()."/phars/extracted")) @mkdir(getcwd()."/phars/extracted");
+        if (!is_dir(getcwd(). DS . "phars"))
+        	@mkdir(getcwd(). DS . "phars");
+
+        if (!is_dir(getcwd(). DS . "phars" . DS . "extracted"))
+        	@mkdir(getcwd(). DS . "phars" . DS . "extracted");
 
         $this->sendMessage("
         Hello! This project is used for extracting Phar file (PHP Archiver) into source code.
-        Creator: @KennFatt
+        Creator: https://kennan.xyz/
         Github: https://www.github.com/KennFatt
         ");
 
@@ -54,19 +61,19 @@ class UnPhar {
 
     /**
      * Close the program.
-     * 
-     * @return mixed
+     *
+     * @param string $message
+     * @return void
      */
-    public function close(string $message = "")
+    public function close(string $message = "") : void
     {
-        if (isset($this->pharFile)) $this->pharFile = null;
-        if (isset($this->outputPath)) $this->outputPath = "";
+        $this->outputPath = "";
 
         if ($message !== "") {
             $this->sendMessage($message);
         }
 
-        $this->sendMessage("Thank you for using " . UnPhar::NAME . "!");
+        $this->sendMessage("Thank you for using " . UnPhar::NAME . " by " . UnPhar::AUTHOR . " !");
         exit;
     }
 
@@ -75,16 +82,16 @@ class UnPhar {
      *
      * @return void
      */
-    public function processExecute()
+    public function processExecute() : void
     {
         /** @var \Phar[] */
         $scannedFiles = [];
 
-        $this->outputPath = getcwd()."/phars/extracted/";
+        $this->outputPath = getcwd(). DS . "phars" . DS . "extracted" . DS;
 
-        foreach (scandir(getcwd()."/phars/") as $id => $fileName) {
-            if ($fileName == "." or $fileName == ".." or $fileName == "extracted" or !strpos($fileName, ".phar")) continue;
-            $scannedFiles[$fileName] = new Phar(getcwd()."/phars/$fileName", 0);
+        foreach (scandir(getcwd(). DS . "phars" . DS) as $id => $fileName) {
+            if ($fileName === "." or $fileName === ".." or $fileName === "extracted" or !strpos($fileName, ".phar")) continue;
+            $scannedFiles[$fileName] = new Phar(getcwd(). DS . "phars" . DS . "$fileName", 0);
         }
 
         /** @var int */
@@ -97,7 +104,11 @@ class UnPhar {
 
         foreach ($scannedFiles as $name => $pharClass) {
             $this->sendMessage("[$totalFiles] Extracting $name...");
-            $pharClass->extractTo($this->outputPath."/$name/", null, true);
+
+            $mName = explode(".", $name);
+            $name = $mName[0];
+
+            $pharClass->extractTo($this->outputPath. DS . "unphar-{$name}" . DS, null, true);
             $totalFiles--;
         }
 
@@ -110,12 +121,13 @@ class UnPhar {
      *
      * @param string $message
      *
-     * @return mixed
+     * @return string
      */
-    public function sendMessage(string $message)
+    public function sendMessage(string $message) : string
     {
         $message = $message !== "" ? $message : $this->errorCause(UnPhar::INVALID_MESSAGE);
         echo $message . PHP_EOL;
+        return $message;
     }
 
     /**
@@ -126,7 +138,6 @@ class UnPhar {
     public function readLine() : string
     {
         $input = trim((string) fgets(STDIN));
-        $this->tempInput = $input;
         return $input;
     }
 
@@ -155,8 +166,6 @@ class UnPhar {
     }
 }
 
-function run() {
-    $class = new UnPhar();
-}
+define("DS", DIRECTORY_SEPARATOR);
 
-run();
+new UnPhar();

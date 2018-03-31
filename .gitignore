@@ -1,0 +1,5 @@
+# Exclude IDE
+/.idea
+
+# Some local data
+/src/phars/*

@@ -1,5 +1,6 @@
 # UnPhar
-A Simple software to extract PHAR into a files.
+A Simple software to extract PHAR into a files.  
+[![HitCount](http://hits.dwyl.io/kennfatt/UnPhar.svg)](http://hits.dwyl.io/kennfatt/UnPhar)
 
 ```
 PHP VERSION >= 7.1.0

@@ -83,7 +83,8 @@ namespace unphar {
             }
 
             try {
-                $cleanFileName = explode(".", $fileInfo->getBasename())[0];
+                $cleanFileName =
+                    substr($fileInfo->getBasename(), 0, strlen($fileInfo->getBasename()) - 5);
                 if (!isset($phars[$cleanFileName])) {
                     $phars[$cleanFileName] = new Phar($pathName);
                 }

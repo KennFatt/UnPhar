@@ -1,5 +1,9 @@
 # Exclude IDE
 /.idea
 
+# User dirs
+out/
+phars/
+
 # Some local data
 /src/phars/*

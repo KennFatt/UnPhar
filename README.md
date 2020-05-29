@@ -1,19 +1,31 @@
 # UnPhar
-A Simple software to extract PHAR into a files.  
-[![HitCount](http://hits.dwyl.io/kennfatt/UnPhar.svg)](http://hits.dwyl.io/kennfatt/UnPhar)
+> __PHP Utility tool to extracting a Phar (PHP Archive) file in batch mode.__
 
+## Requirements
 ```
-PHP VERSION >= 7.1.0
-OS: Tested on Linux and Windows
+PHP: 7.1.0
 ```
 
-# How To Use
+## Usage
+There is two main folders: `out/` and `phars/`.  
+Please put all your `.phar` files into `phars/` folder and let the `out/` folder is empty.
 
-1. Before extracting, make sure that "phars" folder is exists. (or it will generated automatically)
-2. Put all your phar file(s) into "phars" folder.
-3. Launch it and you can see extracted files on "extracted" folder.
+Execute `unphar.php` with your executable php binary.  
+```
+php unphar.php --override
+```
+_This example let the program to override existing extracted (out) file._
 
-# About
+## Extras
+This migt be useful for *nix platform to extract `.phar` file directly with command `phar`. Make sure that file `/usr/bin/phar` is available on your machine.  
+```
+/usr/bin/phar extract -f YourPharFile.phar /path/to/extraction
+```
 
-Author: @KennFatt
+In real case:  
+```
+phar extract -f composer.phar .
+```
 
+## Credits
+Author: [KennFatt](https://github.com/KennFatt)  

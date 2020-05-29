@@ -84,7 +84,9 @@ namespace unphar {
 
             try {
                 $cleanFileName = explode(".", $fileInfo->getBasename())[0];
-                $phars[$cleanFileName] = new Phar($pathName);
+                if (!isset($phars[$cleanFileName])) {
+                    $phars[$cleanFileName] = new Phar($pathName);
+                }
             } catch (UnexpectedValueException $e) {
                 printf("File: `%s` is not a valid Phar.\n", $fileInfo->getFilename());
             }
